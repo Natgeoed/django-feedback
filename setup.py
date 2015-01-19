@@ -2,7 +2,7 @@
 
 import os
 from distutils.core import setup
-from disttest import test
+# from disttest import test
 
 
 def read(fname):
@@ -21,12 +21,12 @@ setup(
     packages=[
         'feedback',
     ],
-    cmdclass={'test': test},
-    options={
-        'test': {
-            'test_dir': ['test'],  # will run all .py files in the tests/ directory
-        }
-    },
+    # cmdclass={'test': test},
+    # options={
+    #     'test': {
+    #         'test_dir': ['test'],  # will run all .py files in the tests/ directory
+    #     }
+    # },
     install_requires=read('requirements.txt'),
     include_package_data=True,
     classifiers=[
