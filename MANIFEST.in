@@ -1,3 +1,4 @@
+include requirements.txt
 include feedback/static/feedback/jquery.form.js
 include feedback/static/feedback/main.css
 include feedback/static/feedback/main.js
