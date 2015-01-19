@@ -17,10 +17,7 @@ setup(
     license='Apache v2',
     url='http://github.com/unaizalakain/django-feedback/',
     keywords=['blog', 'django', 'feedback', 'ajax', 'user', 'customer', 'comment'],
-    package_data=find_packages(),
-    packages=[
-        'feedback',
-    ],
+    packages=find_packages(),
     # cmdclass={'test': test},
     # options={
     #     'test': {
