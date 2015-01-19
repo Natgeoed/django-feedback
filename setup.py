@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import os
-from distutils.core import setup
+from setuptools import setup, find_packages
 # from disttest import test
 
 
@@ -17,7 +17,7 @@ setup(
     license='Apache v2',
     url='http://github.com/unaizalakain/django-feedback/',
     keywords=['blog', 'django', 'feedback', 'ajax', 'user', 'customer', 'comment'],
-    package_data={'feedback': ['static/feedback/*.js', 'static/feedback/*.css', 'static/feedback/images/*.png', 'CREDITS']},
+    package_data=find_packages(),
     packages=[
         'feedback',
     ],
