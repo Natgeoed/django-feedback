@@ -2,8 +2,9 @@ from django.conf.urls.defaults import patterns, url
 
 from feedback.views import FeedbackView
 
-urlpatterns = patterns('',
-        url(r'^ajax(?P<url>.*)$', FeedbackView.as_view(), name='feedback'),
-    )
+urlpatterns = patterns(
+    '',
+    url(r'^$', FeedbackView.as_view(), name='feedback_submit'),
+)
 
 # vim: et sw=4 sts=4
