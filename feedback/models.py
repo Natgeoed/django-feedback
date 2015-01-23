@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from .settings import SUBJECT_CHOICES
+from .settings import SUBJECT_CHOICES, STATUS_CHOICES, DEFAULT_STATUS
 
 
 class Feedback(models.Model):
@@ -14,8 +14,7 @@ class Feedback(models.Model):
         choices=SUBJECT_CHOICES,
         max_length=255,
         blank=True,
-        default=''
-    )
+        default='')
     feedback = models.TextField(
         _('feedback'),
         default='')
@@ -23,6 +22,12 @@ class Feedback(models.Model):
         _('e-mail (optional)'),
         blank=True,
         default='')
+    status = models.CharField(
+        _('status'),
+        choices=STATUS_CHOICES,
+        max_length=255,
+        blank=True,
+        default=DEFAULT_STATUS)
     date_submitted = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -31,3 +36,13 @@ class Feedback(models.Model):
 
     def __unicode__(self):
         return u'Feedback on {url}'.format(url=self.url)
+
+
+class FeedbackNote(models.Model):
+    """
+    A note on a piece of feedback
+    """
+    feedback = models.ForeignKey('feedback.Feedback', related_name="notes")
+    user = models.ForeignKey('auth.User')
+    note = models.TextField()
+    date_submitted = models.DateTimeField(blank=True, auto_now_add=True)

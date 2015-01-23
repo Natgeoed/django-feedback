@@ -10,6 +10,12 @@ DEFAULT_SETTINGS = {
         ("lost", "I got stuck"),
         ("missing", "I can't find something"),
     ),
+    'STATUS_CHOICES': (
+        ('unread', 'Unread'),
+        ('exported', 'Exported'),
+        ('closed', 'Closed'),
+    ),
+    'DEFAULT_STATUS': 'unread',
 }
 
 USER_SETTINGS = DEFAULT_SETTINGS.copy()

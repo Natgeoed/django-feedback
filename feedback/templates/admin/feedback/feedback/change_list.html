@@ -1,0 +1,26 @@
+{% extends "admin/change_list.html" %}
+{% load admin_static %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style type="text/css">
+    div.arrow { background:transparent url({% static "admin/img/sorting-icons.gif" %}) no-repeat scroll 0px -108px; width:16px; height:16px; display:block;}
+    div.arrow:hover { background-position:0px -87px;}
+    div.arrow.up { background-position:0px -66px;}
+    div.arrow.up:hover { background-position:0px -45px;}
+</style>
+{% endblock %}
+
+{% block extrahead %}
+{{ block.super }}
+<script type="text/javascript">
+(function($) {
+    $(document).ready(function(){
+        $("div.arrow").click(function(){
+            $($(this).data("target")).toggle();
+            $(this).toggleClass("up");
+        });
+    });
+})(django.jQuery);
+</script>
+{% endblock extrahead %}

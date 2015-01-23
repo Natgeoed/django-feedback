@@ -1,0 +1,98 @@
+{% extends "admin/change_form.html" %}
+{% load admin_static i18n %}
+
+
+{% block inline_field_sets %}
+{% for inline_admin_formset in inline_admin_formsets %}
+{% if inline_admin_formset.formset.prefix == 'notes' %}
+<div class="inline-group" id="{{ inline_admin_formset.formset.prefix }}-group">
+  <div class="tabular inline-related {% if forloop.last %}last-related{% endif %}">
+        {{ inline_admin_formset.formset.management_form }}
+        <fieldset class="module">
+            <h2>Feedback notes</h2>
+            <table>
+                <thead><tr><th colspan="2">User</th><th>Note</th><th>Date Submitted</th></tr></thead>
+                <tbody>
+                {% for inline_admin_form in inline_admin_formset %}
+                    {% if not forloop.last %}
+                    {% if inline_admin_form.form.non_field_errors %}
+                    <tr><td colspan="4">{{ inline_admin_form.form.non_field_errors }}</td></tr>
+                    {% endif %}
+                    <tr class="form-row {% cycle "row1" "row2" %} {% if inline_admin_form.original or inline_admin_form.show_url %}has_original{% endif %}" id="{{ inline_admin_formset.formset.prefix }}-{{ forloop.counter0 }}">
+                        <td class="original">
+                        {{ inline_admin_form.form.errors.as_ul }}
+                        {{ inline_admin_form.fk_field.field }}
+                        <input type="hidden" id="id_notes-{{ forloop.counter0 }}-id" name="notes-{{ forloop.counter0 }}-id" value="{{ inline_admin_form.form.instance.id }}">
+                        <input type="hidden" id="id_notes-{{ forloop.counter0 }}-user" name="notes-{{ forloop.counter0 }}-user" value="{{ inline_admin_form.form.instance.user.id }}">
+                        <input type="hidden" id="id_notes-{{ forloop.counter0 }}-note" name="notes-{{ forloop.counter0 }}-note" value="{{ inline_admin_form.form.instance.note }}">
+                        <input type="hidden" id="id_notes-{{ forloop.counter0 }}-date_submitted" name="notes-{{ forloop.counter0 }}-date_submitted" value="{{ inline_admin_form.form.instance.date_submitted|date:"c" }}">
+                        </td>
+                        <td class="field-user">{{ inline_admin_form.form.fields.user.errors.as_ul }}{{ inline_admin_form.form.instance.user }}</td>
+                        <td class="field-note">{{ inline_admin_form.form.fields.note.errors.as_ul }}{{ inline_admin_form.form.instance.note }}</td>
+                        <td class="field-date_submitted">{{ inline_admin_form.form.fields.date_submitted.errors.as_ul }}{{ inline_admin_form.form.instance.date_submitted }}</td>
+                        <td class="delete">&nbsp;</td>
+                    </tr>
+                    {% else %}
+                    <tr class="form-row row1 empty-form" id="notes-empty">
+                        <td class="original">
+                        {{ inline_admin_form.form.errors }}
+                            <input id="id_notes-__prefix__-id" name="notes-__prefix__-id" type="hidden">
+                            <input id="id_notes-__prefix__-feedback" name="notes-__prefix__-feedback" type="hidden" data-value="8">
+                        </td>
+                        <td class="field-user">
+                            <input id="id_notes-__prefix__-user" name="notes-__prefix__-user" type="hidden" data-value="{{ request.user.id }}">
+                            {{ request.user }}
+                        </td>
+                        <td class="field-note">
+                            <textarea class="vLargeTextField" cols="40" id="id_notes-__prefix__-note" name="notes-__prefix__-note" rows="10"></textarea>
+                        </td>
+                        <td class="field-date_submitted">Now</td>
+                    </tr>
+                    {% endif %}
+                {% endfor %}
+                </tbody>
+            </table>
+        </fieldset>
+    </div>
+</div>
+<script type="text/javascript">
+
+(function($) {
+  $.fn.myTabularFormset = function(options) {
+    var $rows = $(this);
+    var alternatingRows = function(row) {
+      $($rows.selector).not(".add-row").removeClass("row1 row2")
+        .filter(":even").addClass("row1").end()
+        .filter(":odd").addClass("row2");
+    };
+    $rows.formset({
+      prefix: options.prefix,
+      addText: options.addText,
+      formCssClass: "dynamic-" + options.prefix,
+      deleteCssClass: "inline-deletelink",
+      deleteText: options.deleteText,
+      emptyCssClass: "empty-form",
+      removed: alternatingRows,
+      added: function(row) {
+        alternatingRows(row);
+        row.find('[data-value]').each(function(index, element){
+            $(element).val($(element).data('value'));
+        });
+      }
+    });
+
+    return $rows;
+  };
+  $("#notes-group .tabular.inline-related tbody tr").myTabularFormset({
+    prefix: "notes",
+    adminStaticPrefix: '{% static "admin/" %}',
+    addText: "{% blocktrans %}Add another Note{% endblocktrans %}",
+    deleteText: "{% trans 'Remove' %}",
+  });
+})(django.jQuery);
+</script>
+{% else %}
+    {% include inline_admin_formset.opts.template %}
+{% endif %}
+{% endfor %}
+{% endblock %}
