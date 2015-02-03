@@ -2,6 +2,7 @@
 from django import forms
 
 from feedback.models import Feedback
+from feedback.settings import DEFAULT_STATUS
 
 
 class FeedbackForm(forms.ModelForm):
@@ -13,3 +14,9 @@ class FeedbackForm(forms.ModelForm):
         widgets = {
             'url': forms.HiddenInput()
         }
+
+    def clean_status(self):
+        status = self.cleaned_data.get('status', '')
+        if status == '' or status is None:
+            return DEFAULT_STATUS
+        return status

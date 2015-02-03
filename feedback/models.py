@@ -1,7 +1,8 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from .settings import SUBJECT_CHOICES, STATUS_CHOICES, DEFAULT_STATUS
+from .settings import (SUBJECT_CHOICES, STATUS_CHOICES, DEFAULT_STATUS,
+                       AUDIENCE_CHOICES)
 
 
 class Feedback(models.Model):
@@ -18,6 +19,12 @@ class Feedback(models.Model):
     feedback = models.TextField(
         _('feedback'),
         default='')
+    audience = models.CharField(
+        _('audience'),
+        max_length=255,
+        blank=True,
+        default='',
+        choices=AUDIENCE_CHOICES)
     email = models.EmailField(
         _('e-mail (optional)'),
         blank=True,

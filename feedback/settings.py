@@ -15,6 +15,11 @@ DEFAULT_SETTINGS = {
         ('exported', 'Exported'),
         ('closed', 'Closed'),
     ),
+    'AUDIENCE_CHOICES': (
+        ('educator', 'Educator'),
+        ('caregiver', 'Caregiver'),
+        ('student', 'Student'),
+    ),
     'DEFAULT_STATUS': 'unread',
 }
 

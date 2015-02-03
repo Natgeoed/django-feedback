@@ -8,13 +8,13 @@ def export_and_update(modeladmin, request, queryset):
         from cStringIO import StringIO
     except ImportError:
         from StringIO import StringIO
-    data = queryset.values_list('url', 'subject', 'feedback', 'email', 'date_submitted', 'status')
+    data = queryset.values_list('url', 'subject', 'feedback', 'audience', 'email', 'date_submitted', 'status')
     output = StringIO()
 
     # Header
-    output.write('"url","subject","feedback","email","date submitted","status"\n')
+    output.write('"url","subject","feedback","audience","email","date submitted","status"\n')
     for row in data:
-        output.write('"{0}","{1}","{2}","{3}","{4:%Y-%m-%d %H:%M:%S}","{5}"\n'.format(*row))
+        output.write('"{0}","{1}","{2}","{3}","{4}","{5:%Y-%m-%d %H:%M:%S}","{6}"\n'.format(*row))
     queryset.update(status='exported')
     response = HttpResponse(output.getvalue(), content_type="text/csv")
     response['Content-Disposition'] = 'attachment; filename="feedback_export.csv"'
@@ -29,7 +29,7 @@ class FeedbackNoteInline(admin.TabularInline):
 
 
 class FeedbackAdmin(admin.ModelAdmin):
-    list_display = ('url', 'subject', 'date_submitted', 'status', 'extended_fields')
+    list_display = ('url', 'subject', 'date_submitted', 'audience', 'status', 'extended_fields')
     list_filter = ('subject', 'status', )
     list_editable = ('status', )
     date_hierarchy = 'date_submitted'
