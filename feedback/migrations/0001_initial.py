@@ -1,40 +1,46 @@
 # -*- coding: utf-8 -*-
-from south.utils import datetime_utils as datetime
-from south.db import db
-from south.v2 import SchemaMigration
-from django.db import models
+from __future__ import unicode_literals
+
+from django.db import models, migrations
+from django.conf import settings
 
 
-class Migration(SchemaMigration):
+class Migration(migrations.Migration):
 
-    def forwards(self, orm):
-        # Adding model 'Feedback'
-        db.create_table(u'feedback_feedback', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('url', self.gf('django.db.models.fields.CharField')(max_length=255)),
-            ('subject', self.gf('django.db.models.fields.CharField')(default='', max_length=255, blank=True)),
-            ('feedback', self.gf('django.db.models.fields.TextField')(default='')),
-            ('email', self.gf('django.db.models.fields.EmailField')(default='', max_length=75, blank=True)),
-            ('date_submitted', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
-        ))
-        db.send_create_signal(u'feedback', ['Feedback'])
+    dependencies = [
+        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+    ]
 
-
-    def backwards(self, orm):
-        # Deleting model 'Feedback'
-        db.delete_table(u'feedback_feedback')
-
-
-    models = {
-        u'feedback.feedback': {
-            'Meta': {'object_name': 'Feedback'},
-            'date_submitted': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-            'email': ('django.db.models.fields.EmailField', [], {'default': "''", 'max_length': '75', 'blank': 'True'}),
-            'feedback': ('django.db.models.fields.TextField', [], {'default': "''", 'blank': 'True'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'subject': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '255', 'blank': 'True'}),
-            'url': ('django.db.models.fields.CharField', [], {'max_length': '255'})
-        }
-    }
-
-    complete_apps = ['feedback']
+    operations = [
+        migrations.CreateModel(
+            name='Feedback',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('url', models.CharField(help_text='The URL from which the feedback was given.', max_length=255, verbose_name='url')),
+                ('subject', models.CharField(default=b'', max_length=255, verbose_name='subject', blank=True, choices=[(b'suggestion', b'I have a suggestion'), (b'kudos', b'Kudos - I like something'), (b'error', b'Something went wrong'), (b'lost', b'I got stuck'), (b'missing', b"I can't find something")])),
+                ('feedback', models.TextField(default=b'', verbose_name='feedback')),
+                ('audience', models.CharField(default=b'', max_length=255, verbose_name='audience', blank=True, choices=[(b'educator', b'Educator'), (b'caregiver', b'Caregiver'), (b'student', b'Student')])),
+                ('email', models.EmailField(default=b'', max_length=75, verbose_name='e-mail (optional)', blank=True)),
+                ('status', models.CharField(default=b'unread', max_length=255, verbose_name='status', blank=True, choices=[(b'unread', b'Unread'), (b'exported', b'Exported'), (b'closed', b'Closed')])),
+                ('date_submitted', models.DateTimeField(auto_now_add=True)),
+            ],
+            options={
+                'verbose_name': 'feedback',
+                'verbose_name_plural': 'feedback',
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='FeedbackNote',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('note', models.TextField()),
+                ('date_submitted', models.DateTimeField(auto_now_add=True)),
+                ('feedback', models.ForeignKey(related_name='notes', to='feedback.Feedback')),
+                ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+    ]

@@ -4,10 +4,10 @@ A pluggable user feedback app
 """
 __version_info__ = {
     'major': 0,
-    'minor': 5,
+    'minor': 6,
     'micro': 0,
     'releaselevel': 'beta',
-    'serial': 10
+    'serial': 1
 }
 
 
